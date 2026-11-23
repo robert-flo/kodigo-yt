@@ -5,14 +5,12 @@
     <img src=".github/Assets/kodigo_logo.png" width="220" alt="Kodigo"/>
   </picture><br/>
   <img src=".github/Assets/transparent.png" height="30" width="0px"/>
-  AI For Devs Jr. 5 — Grupo 12
+  AI For Devs Jr. 5
   <img src=".github/Assets/transparent.png" height="30" width="0px"/>
 </h3>
 
 <h6 align="center">
-  <a href="https://github.com/kodigo-grupo-12/monorepo">Monorepo</a>
-  ·
-  <a href="https://github.com/kodigo-grupo-12/documentacion">Documentación</a>
+  <a href="https://github.com/robert-flo/kodigo-yt">kodigo-yt</a>
 </h6>
 
 <p align="center">
@@ -23,7 +21,7 @@
 
 <p align="center">
   Refactorización y personalización de un sistema agéntico mediante skills propias.<br/>
-  Entregable del <strong>Grupo 12</strong> para el programa <strong>AI For Devs Jr. 5</strong> de <strong>Kodigo</strong>.<br/>
+  Entregable individual para el programa <strong>AI For Devs Jr. 5</strong> de <strong>Kodigo</strong>.<br/>
   <em>Formamos talento tech en El Salvador y Latinoamérica</em>
 </p>
 
@@ -33,7 +31,7 @@
 </p>
 
 <p align="center">
-  <strong>INTEGRANTES</strong><br/>
+  <strong>ESTUDIANTE</strong><br/>
   Roberto Carlos Flores Quintanilla
 </p>
 

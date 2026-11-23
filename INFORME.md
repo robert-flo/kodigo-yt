@@ -5,7 +5,7 @@
     <img src=".github/Assets/kodigo_logo.png" width="220" alt="Kodigo"/>
   </picture><br/>
   <img src=".github/Assets/transparent.png" height="30" width="0px"/>
-  AI For Devs Jr. 5 — Grupo 12
+  AI For Devs Jr. 5
   <img src=".github/Assets/transparent.png" height="30" width="0px"/>
 </h3>
 
