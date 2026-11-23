@@ -48,7 +48,68 @@
 
 El presente repositorio documenta la refactorización de la suite de descarga `yt-*` hacia una única puerta de entrada, el ejecutable `yt`, y el flujo de skills y agentes con el que se realizó el trabajo.
 
+El informe completo, con el mismo orden que la Tarea 03 (decisiones, corrección frente a la IA y evidencia de consola), está en [INFORME.md](INFORME.md).
+
 El código original se conserva en [`antes/`](antes/). El código refactorizado se encuentra en [`despues/`](despues/). El comportamiento de cada descarga se mantiene. El cambio es de estructura y sigue el molde de `ravn-wt`: launcher, catálogo de comandos, módulos y menú.
+
+## Cómo descargarlo y probarlo
+
+Hace falta `git` y `bash`. Esta prueba no descarga nada y no necesita red ni `yt-dlp`.
+
+```bash
+git clone https://github.com/robert-flo/kodigo-yt.git
+cd kodigo-yt
+./despues/yt help
+./despues/yt no-existe
+./despues/yt audio
+cmp antes/yt-audio despues/runtime/scripts/audio && echo "audio identico"
+```
+
+Resultado esperado: el help lista los seis comandos, `no-existe` termina con error, `yt audio` muestra la ayuda del módulo y no baja ningún archivo, y `cmp` imprime `audio identico`.
+
+El menú, en una terminal:
+
+```bash
+./despues/yt
+```
+
+`q` sale. `h` muestra la ayuda. Sin terminal, `yt` muestra el help en lugar del menú.
+
+Una descarga real es opcional. Requiere `yt-dlp` y `ffmpeg`, y escribe en `/zt/yt-downloads/` o, si esa ruta no existe, en `~/yt-downloads/`.
+
+```bash
+./despues/yt audio "https://youtu.be/VIDEO"
+./despues/yt audio-playlist --list "https://www.youtube.com/playlist?list=LIST"
+```
+
+`--list` solo inspecciona la playlist.
+
+## Opciones
+
+| Tecla | Comando | Qué hace | Opciones propias |
+| --- | --- | --- | --- |
+| `1` | `yt audio` | Un audio en Opus | Las de `yt-dlp` |
+| `2` | `yt video` | Un video de hasta 1080p | `-f` salta el menú de calidades |
+| `3` | `yt audio-playlist` | Playlist en Opus, `01 - Artista - Título` | `--list`, `--no-archive` |
+| `4` | `yt video-playlist` | Playlist en MP4, `001 - Título [id]` | `--list`, `--no-archive`, `--standard`, `--premium`, `--720p`, `--no-subs` |
+| `5` | `yt x` | Videos de un post de X | `--no-cookies` |
+| `h` | `yt help` | Catálogo | — |
+| `q` | — | Sale del menú | — |
+
+Los nombres anteriores siguen en `despues/bin/`: `yt-audio`, `yt-video`, `yt-audio-playlist`, `yt-video-playlist` y `yt-x`. Cada uno llama a `yt` con el mismo comando.
+
+## Refactorización
+
+Antes, cada formato era un ejecutable con su propia interfaz. Ahora la puerta está separada del cuerpo:
+
+| Pieza | Ruta | Responsabilidad |
+| --- | --- | --- |
+| Launcher y menú | `despues/yt` | Banner, opciones, despacho |
+| Catálogo | `despues/runtime/commands.tsv` | Nombre, alias, etiqueta e icono |
+| Módulos | `despues/runtime/scripts/` | La descarga, igual que en `antes/` |
+| Nombres viejos | `despues/bin/` | Delegan en `yt` |
+
+Los cuerpos son los mismos archivos. `cmp` entre `antes/yt-audio` y `despues/runtime/scripts/audio` (y el equivalente de los otros cuatro) no muestra diferencia. Destino, tope de 1080p y subtítulos se quedaron dentro de cada módulo para no cambiar el comportamiento. El detalle y la evidencia de consola están en [INFORME.md](INFORME.md).
 
 ## Flujo de skills
 
@@ -85,17 +146,6 @@ En esta entrega el PM documentó el flujo y dejó el árbol adaptado para su eje
 | `yt-audio`, `yt-video`, `yt-audio-playlist`, `yt-video-playlist`, `yt-x` | Los mismos cuerpos en `despues/runtime/scripts/`, más wrappers en `despues/bin/` |
 
 Los cuerpos de `audio`, `video`, `audio-playlist`, `video-playlist` y `x` son los scripts de `antes/`. La descarga no se reescribió. `yt-common.sh` permanece junto a los módulos que lo cargan.
-
-## Ejecución
-
-```bash
-./despues/yt              # menú, si hay terminal
-./despues/yt help         # catálogo
-./despues/yt audio --help # ayuda del módulo original, si no recibe URL
-./despues/bin/yt-audio    # nombre anterior, misma puerta
-```
-
-Sin terminal, `yt` muestra la ayuda. Una opción del menú solicita la URL y ejecuta el módulo real. `q` cierra el menú.
 
 ## Fuera de alcance
 
