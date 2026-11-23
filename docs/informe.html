@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <title>Refactorización y personalización de un sistema agéntico mediante skills propias</title>
+  <style>
+    @page { size: A4; margin: 16mm 16mm 18mm; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: #1c2430;
+      font-family: "Liberation Serif", "Noto Serif", Georgia, serif;
+      font-size: 11pt;
+      line-height: 1.45;
+    }
+    h1, h2, h3 { font-family: "Liberation Sans", "Noto Sans", sans-serif; color: #0e3b36; }
+    h1 { font-size: 16pt; text-align: center; margin: 0.4em 0; }
+    h2 { font-size: 13pt; margin: 1.2em 0 0.4em; border-bottom: 1px solid #1f6f64; padding-bottom: 0.15em; }
+    h3 { font-size: 11.5pt; margin: 0.9em 0 0.3em; }
+    p { margin: 0.4em 0; }
+    a { color: #0e3b36; }
+    .cover { text-align: center; page-break-after: always; padding-top: 8mm; }
+    .cover img.logo { width: 58mm; }
+    .cover img.rule { width: 90mm; margin: 6mm 0; }
+    .eyebrow { letter-spacing: 0.14em; font-size: 10pt; color: #1f6f64; font-family: "Liberation Sans", sans-serif; }
+    .meta { margin-top: 8mm; font-size: 11pt; }
+    .meta strong { display: block; font-family: "Liberation Sans", sans-serif; letter-spacing: 0.06em; font-size: 9.5pt; }
+    table { width: 100%; border-collapse: collapse; margin: 0.5em 0 0.8em; font-size: 9.5pt; }
+    th, td { border: 1px solid #c5d5d2; padding: 4px 6px; vertical-align: top; text-align: left; }
+    th { background: #e7f3f1; font-family: "Liberation Sans", sans-serif; }
+    code, pre { font-family: "Liberation Mono", "DejaVu Sans Mono", monospace; font-size: 8.6pt; }
+    pre {
+      background: #f4f7f7;
+      border: 1px solid #d5e2df;
+      padding: 8px 10px;
+      white-space: pre-wrap;
+      page-break-inside: avoid;
+    }
+    .note { font-size: 10pt; }
+    footer {
+      position: running(footer);
+    }
+  </style>
+</head>
+<body>
+
+<section class="cover">
+  <img class="logo" src="../.github/Assets/kodigo_logo.png" alt="Kodigo"/>
+  <p class="eyebrow">AI FOR DEVS JR. 5</p>
+  <h1>Refactorización y personalización de un sistema agéntico mediante skills propias</h1>
+  <img class="rule" src="../.github/Assets/macchiato.png" alt=""/>
+  <p>Entregable individual</p>
+  <div class="meta">
+    <p><strong>INSTRUCTOR</strong>Ing. Ronald Mejía</p>
+    <p><strong>ESTUDIANTE</strong>Roberto Carlos Flores Quintanilla</p>
+    <p><strong>REPOSITORIO</strong>https://github.com/robert-flo/kodigo-yt</p>
+    <p><strong>FECHA DE ENTREGA</strong>Domingo, 22 de noviembre de 2026</p>
+  </div>
+  <p><em>Formamos talento tech en El Salvador y Latinoamérica</em></p>
+</section>
+
+<h2>1. Resumen y decisiones</h2>
+<p>Este informe documenta la refactorización de la suite real de descarga <code>yt-audio</code>, <code>yt-video</code>, <code>yt-audio-playlist</code>, <code>yt-video-playlist</code> y <code>yt-x</code> hacia una sola puerta, el ejecutable <code>yt</code>. El comportamiento de cada descarga se conserva. Cambia la estructura: un launcher, un catálogo y un menú, con el mismo molde que <code>ravn-wt</code>. El método de trabajo queda en skills y en tres agentes: PM, WK y RV.</p>
+<p>La prueba de la puerta no necesita red. Una descarga real sí: se ejecutó con los scripts nuevos de <code>despues/</code>, no con los de <code>antes/</code>.</p>
+<table>
+  <tr><th>Recurso</th><th>Contenido</th><th>Dónde</th></tr>
+  <tr><td>Repositorio</td><td>Original, refactor, skills, spec, tickets y este PDF</td><td>github.com/robert-flo/kodigo-yt</td></tr>
+  <tr><td>Código original</td><td>Los seis archivos de la suite, sin modificar</td><td>antes/</td></tr>
+  <tr><td>Código nuevo</td><td>Launcher <code>yt</code>, catálogo, módulos y wrappers</td><td>despues/</td></tr>
+  <tr><td>Skills</td><td>ro-restate-goals, grill-me, grilling, to-spec, to-tickets</td><td>.agents/skills/</td></tr>
+</table>
+<h3>Decisiones del estudiante</h3>
+<ul>
+  <li>No se reescribió la descarga. Se separó la puerta (menú, catálogo y despacho) del cuerpo de cada comando. Los módulos de <code>despues/runtime/scripts/</code> son los mismos bytes que <code>antes/</code>.</li>
+  <li>El menú no es un diseño nuevo. Es el de <code>ravn-wt</code> (banner, números, <code>h</code>, <code>q</code> y <code>Selection</code>) con las opciones de esta suite.</li>
+  <li>No se inventaron skills de audio o de video. Se documentan las que sí se usaron: <code>ro-restate-goals</code>, <code>grill-me</code>, <code>to-spec</code> y <code>to-tickets</code>, más <code>music-renamer-metadata</code>, que fijó el nombre <code>01 - Artista - Título</code>.</li>
+  <li>Quedan fuera el paquete Arch, el reemplazo de los dotfiles y cualquier archivo de cookies.</li>
+</ul>
+<table>
+  <tr><th>Decisión</th><th>Lo que propuso la IA</th><th>Lo que quedó</th></tr>
+  <tr><td>Skills</td><td>Escribir skills nuevas, una por comando.</td><td>Esas skills no existen. El informe usa el flujo real.</td></tr>
+  <tr><td>Menú</td><td>Un menú distinto, sin el banner.</td><td>El menú de <code>ravn-wt</code>, adaptado.</td></tr>
+  <tr><td>Repositorio</td><td>Nombrarlo <code>robert-flo/yt</code>.</td><td><code>robert-flo/kodigo-yt</code>. El ejecutable sí se llama <code>yt</code>.</td></tr>
+</table>
+
+<h2>2. Cómo descargar y probar</h2>
+<p>Para la puerta hacen falta <code>git</code> y <code>bash</code>. No hace falta Python ni red.</p>
+<pre>git clone https://github.com/robert-flo/kodigo-yt.git
+cd kodigo-yt
+./despues/yt help
+./despues/yt no-existe
+./despues/yt audio
+cmp antes/yt-audio despues/runtime/scripts/audio &amp;&amp; echo "audio identico"</pre>
+<p>Resultado esperado: el help lista los comandos, <code>no-existe</code> termina con error, <code>yt audio</code> muestra la ayuda y no descarga, y <code>cmp</code> imprime <code>audio identico</code>.</p>
+<p>El menú, en una terminal: <code>./despues/yt</code>. <code>q</code> sale. <code>h</code> muestra la ayuda. Sin terminal, <code>yt</code> muestra el help.</p>
+<h3>Opciones</h3>
+<table>
+  <tr><th>Tecla</th><th>Comando nuevo</th><th>Qué hace</th><th>Opciones propias</th></tr>
+  <tr><td>1</td><td>yt audio</td><td>Un audio en Opus</td><td>Las de yt-dlp</td></tr>
+  <tr><td>2</td><td>yt video</td><td>Un video de hasta 1080p</td><td>-f salta el menú de calidades</td></tr>
+  <tr><td>3</td><td>yt audio-playlist</td><td>Playlist en Opus, 01 - Artista - Título</td><td>--list, --no-archive</td></tr>
+  <tr><td>4</td><td>yt video-playlist</td><td>Playlist en MP4, 001 - Título [id]</td><td>--list, --no-archive, --standard, --premium, --720p, --no-subs</td></tr>
+  <tr><td>5</td><td>yt x</td><td>Videos de un post de X</td><td>--no-cookies</td></tr>
+  <tr><td>h</td><td>yt help</td><td>Catálogo</td><td>—</td></tr>
+  <tr><td>q</td><td>—</td><td>Sale del menú</td><td>—</td></tr>
+</table>
+<p>Los nombres anteriores siguen en <code>despues/bin/</code>. Cada wrapper ejecuta <code>despues/yt</code>, no el script de <code>antes/</code>.</p>
+<p>Descarga real, opcional. Requiere <code>yt-dlp</code> y <code>ffmpeg</code>. Escribe en <code>/zt/yt-downloads/</code> o, si esa ruta no existe, en <code>~/yt-downloads/</code>.</p>
+<pre>./despues/yt audio "https://youtu.be/HWsOivtPz-o"
+./despues/yt video "https://youtu.be/Shqtk_2Jd3c"</pre>
+<p>Esas URLs son las de los ejemplos de la suite. El audio es «superstar», de Sharou. El video es «How to set up Herdr for multi-agent coding». En una terminal, si los subtítulos fallan, el script pregunta si se continúa. Hay que responder <code>s</code>. Sin terminal, sigue solo.</p>
+
+<h2>3. La refactorización</h2>
+<p>Antes, cada formato era un ejecutable con su propia interfaz. No había catálogo ni menú. <code>yt-video</code> y <code>yt-video-playlist</code> compartían <code>yt-common.sh</code>, pero la puerta seguía partida en cinco programas.</p>
+<table>
+  <tr><th>Pieza nueva</th><th>Ruta</th><th>Responsabilidad</th></tr>
+  <tr><td>Launcher y menú</td><td>despues/yt</td><td>Banner, opciones, despacho</td></tr>
+  <tr><td>Catálogo</td><td>despues/runtime/commands.tsv</td><td>Nombre, alias, etiqueta e icono</td></tr>
+  <tr><td>Despacho</td><td>despues/runtime/lib/dispatch.sh</td><td>Resuelve el nombre y ejecuta el módulo</td></tr>
+  <tr><td>Módulos</td><td>despues/runtime/scripts/</td><td>La descarga, igual que en antes/</td></tr>
+  <tr><td>Nombres viejos</td><td>despues/bin/</td><td>Llaman a yt audio, yt video, etc.</td></tr>
+</table>
+<p>Destino, tope de 1080p, idioma de subtítulos y cookies del navegador siguen dentro de cada módulo. Sacarlos habría cambiado el comportamiento. La playlist de audio conserva <code>01 - Artista - Título.opus</code> y las etiquetas <code>album</code> y <code>tracknumber</code>.</p>
+
+<h2>4. Evidencia de los scripts nuevos</h2>
+<p>Corrido el 22 de noviembre de 2026. Los comandos son los de <code>despues/</code>.</p>
+<pre>$ ./despues/yt audio "https://youtu.be/HWsOivtPz-o"
+[ExtractAudio] Destination: /zt/yt-downloads/audio/Sharou/30_BGM_superstar.opus
+[EmbedThumbnail] mutagen: Adding thumbnail to ".../30_BGM_superstar.opus"
+[yt-dlp-music-postprocess] 30_BGM_superstar.opus -&gt; Sharou - superstar - しゃろう.opus
+EXIT: 0
+Archivo: /zt/yt-downloads/audio/Sharou/Sharou - superstar - しゃろう.opus (36 991 545 bytes)
+
+$ ./despues/yt video "https://youtu.be/Shqtk_2Jd3c"
+[yt-video] ERROR en subtítulos: HTTP Error 429: Too Many Requests
+[yt-video] Aviso (modo no interactivo): el video se descargará sin subtítulos.
+[Merger] Merging formats into ".../How to set up Herdr for multi-agent coding (full guide) [Shqtk_2Jd3c].mp4"
+EXIT: 0
+Archivo: /zt/yt-downloads/video/How to set up Herdr for multi-agent coding (full guide) [Shqtk_2Jd3c].mp4 (102 023 589 bytes)
+
+$ ./despues/bin/yt-audio "https://youtu.be/HWsOivtPz-o"
+EXIT: 0
+$ ./despues/bin/yt-video "https://youtu.be/Shqtk_2Jd3c"
+EXIT: 0</pre>
+<p class="note">El menú de <code>./despues/yt</code> también llegó a la descarga de audio: opción 1 y la URL de Sharou. <code>cmp</code> entre cada archivo de <code>antes/</code> y su módulo en <code>despues/runtime/scripts/</code> no muestra diferencia. Lo nuevo es la puerta que los ejecuta.</p>
+
+</body>
+</html>

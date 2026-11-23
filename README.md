@@ -46,7 +46,7 @@
 
 El presente repositorio documenta la refactorización de la suite de descarga `yt-*` hacia una única puerta de entrada, el ejecutable `yt`, y el flujo de skills y agentes con el que se realizó el trabajo.
 
-El informe completo, con el mismo orden que la Tarea 03 (decisiones, corrección frente a la IA y evidencia de consola), está en [INFORME.md](INFORME.md).
+El informe para entregar está en [RobertoFlores-Tarea.pdf](RobertoFlores-Tarea.pdf). La misma lectura, en Markdown, está en [INFORME.md](INFORME.md).
 
 El código original se conserva en [`antes/`](antes/). El código refactorizado se encuentra en [`despues/`](despues/). El comportamiento de cada descarga se mantiene. El cambio es de estructura y sigue el molde de `ravn-wt`: launcher, catálogo de comandos, módulos y menú.
 
