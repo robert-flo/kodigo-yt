@@ -1,0 +1,7 @@
+# canonical	aliases	label	description	icon	menu	options
+audio	a --audio	Download audio	Download one audio track as Opus.	 	1	-h --help
+video	v --video	Download video	Download one video up to 1080p.	 	1	-h --help
+audio-playlist	ap --audio-playlist	Download audio playlist	Download a playlist as numbered Opus tracks.	 	1	-h --help
+video-playlist	vp --video-playlist	Download video playlist	Download a playlist as numbered MP4 files.	 	1	-h --help
+x	x --x	Download X video	Download a video from X using browser cookies.	 	1	-h --help
+help	h --help -h	Help and usage	Show this guide.	 	1	-h --help

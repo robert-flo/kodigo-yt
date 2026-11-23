@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+# Help module. Lists the command catalog and returns.
+set -euo pipefail
+
+module_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+RUNTIME_DIR="${RUNTIME_DIR:-$(cd "$module_dir/.." && pwd)}"
+# shellcheck disable=SC1091
+source "$RUNTIME_DIR/lib/presentation.sh"
+# shellcheck disable=SC1091
+source "$RUNTIME_DIR/lib/command_catalog.sh"
+
+print_section "${ICON_INFO} Help and Usage"
+
+cat << 'HELP_EOF'
+  yt downloads audio, video, playlists and X posts through the
+  existing yt-* commands.
+
+  BASIC USE
+    yt                      Open interactive menu
+    yt <command> [args]     Run a command directly
+    yt help                 Show this guide
+
+  COMMANDS
+HELP_EOF
+
+while IFS= read -r command; do
+  command_catalog_get "$command" description || {
+    print_error "$YT_COMMAND_CATALOG_ERROR"
+    exit 1
+  }
+  printf '    %-16s %s\n' "$command" "$YT_COMMAND_CATALOG_VALUE"
+done < <(command_catalog_list all)
+
+cat << 'HELP_EOF'
+
+  COMPATIBILITY
+    yt-audio, yt-video, yt-audio-playlist, yt-video-playlist and yt-x
+    in bin/ call the same modules.
+
+  EXAMPLES
+    yt audio "https://youtu.be/VIDEO"
+    yt audio-playlist --list "https://www.youtube.com/playlist?list=LIST"
+    yt video "https://youtu.be/VIDEO"
+    yt x --no-cookies "https://x.com/user/status/123"
+HELP_EOF

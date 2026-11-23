@@ -1,0 +1,169 @@
+#!/usr/bin/env bash
+# Launcher and command dispatcher for yt.
+# Menu and banner adapted from ravn-wt. Command bodies are the existing scripts.
+
+set -Eeuo pipefail
+
+scrDir="$(dirname "$(realpath "$0")")"
+RUNTIME_DIR="$scrDir/runtime"
+export RUNTIME_DIR
+# shellcheck disable=SC1091
+source "$RUNTIME_DIR/lib/presentation.sh"
+# shellcheck disable=SC1091
+source "$RUNTIME_DIR/lib/lifecycle.sh"
+# shellcheck disable=SC1091
+source "$RUNTIME_DIR/lib/command_catalog.sh"
+# shellcheck disable=SC1091
+source "$RUNTIME_DIR/lib/dispatch.sh"
+
+trap cleanup_runtime SIGINT SIGTERM ERR EXIT
+
+clear_screen() {
+  [[ -t 1 && ${TERM:-dumb} != dumb ]] || return 0
+  printf '\033[H\033[2J'
+}
+
+show_banner() {
+  local gh_user=""
+  gh_user=$(gh api user -q .login 2> /dev/null || echo "robert-flo")
+  echo -e "${CYAN}"
+  cat << 'BANNER_EOF'
+  ╭────────────────────────────────────────────────────╮
+  │                                                    │
+  │  ██╗   ██╗████████╗                                │
+  │  ╚██╗ ██╔╝╚══██╔══╝                                │
+  │   ╚████╔╝    ██║                                   │
+  │    ╚██╔╝     ██║                                   │
+  │     ██║      ██║                                   │
+  │     ╚═╝      ╚═╝                                   │
+  │                                                    │
+BANNER_EOF
+  local name="by Roberto Flores"
+  local user="@${gh_user}"
+  local pad=0
+  printf '  │%-52s│\n' "     Audio, video and playlists via yt-dlp"
+  pad=$((52 - 5 - ${#name} - 1 - ${#user}))
+  printf '  │     %b%s %b%s%b%*s│\n' "$GRAY" "$name" "$WHITE" "$user" "$CYAN" "$pad" ""
+  cat << 'BANNER_EOF'
+  │                                                    │
+  ╰────────────────────────────────────────────────────╯
+BANNER_EOF
+  echo -e "${NC}"
+}
+
+is_help_command() {
+  case "${1:-}" in
+    help | h | --help | -h) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+show_menu() {
+  local command=""
+  local label=""
+  local icon=""
+  local menu_index=1
+
+  echo ""
+  print_section "${RAVN_ICON[ui_command]} Choose an action"
+  while IFS= read -r command; do
+    command_catalog_get "$command" label || {
+      print_error "$YT_COMMAND_CATALOG_ERROR"
+      return 1
+    }
+    label="$YT_COMMAND_CATALOG_VALUE"
+    command_catalog_get "$command" icon || {
+      print_error "$YT_COMMAND_CATALOG_ERROR"
+      return 1
+    }
+    icon="$YT_COMMAND_CATALOG_VALUE"
+    if [[ $command == help ]]; then
+      echo -e "  ${GREEN}h${NC}  $icon  $label"
+    else
+      echo -e "  ${GREEN}$menu_index${NC}  $icon  $label"
+      ((menu_index += 1))
+    fi
+  done < <(command_catalog_list menu)
+  echo -e "  ${GREEN}q${NC}  ${RAVN_ICON[ui_close]}  Exit"
+  echo ""
+  echo -ne "  ${LIGHT_GRAY}Selection:${NC} "
+}
+
+command_for_menu_index() {
+  local choice="$1"
+  local command=""
+  local menu_index=1
+
+  while IFS= read -r command; do
+    [[ $command == help ]] && continue
+    if [[ $choice == "$menu_index" ]]; then
+      printf '%s\n' "$command"
+      return 0
+    fi
+    ((menu_index += 1))
+  done < <(command_catalog_list menu)
+  return 1
+}
+
+run_interactive_menu() {
+  local choice=""
+  local url_input=""
+  local command=""
+
+  while true; do
+    show_menu
+    read -r choice || break
+    case "$choice" in
+      h | H) dispatch_command help || true ;;
+      q | Q)
+        echo ""
+        print_info "Goodbye!"
+        return 0
+        ;;
+      *)
+        if command="$(command_for_menu_index "$choice")"; then
+          echo ""
+          echo -ne "  ${LIGHT_GRAY}URL:${NC} "
+          read -r url_input
+          if [[ -n "$url_input" ]]; then
+            dispatch_command "$command" "$url_input" || true
+          fi
+        else
+          print_error "Invalid option"
+        fi
+        ;;
+    esac
+    echo ""
+    echo -ne "  ${GRAY}Press Enter to continue...${NC}"
+    read -r || break
+    clear_screen
+    show_banner
+  done
+}
+
+main() {
+  if (($# > 0)); then
+    if is_help_command "$1"; then
+      dispatch_command help "${@:2}" || return $?
+      return 0
+    fi
+
+    if command_catalog_get "$1" canonical > /dev/null 2>&1; then
+      dispatch_command "$@" || return $?
+      return 0
+    fi
+
+    print_error "Unknown command: $1"
+    return 1
+  fi
+
+  if [[ -t 0 ]]; then
+    clear_screen
+    show_banner
+    run_interactive_menu
+  else
+    dispatch_command help
+  fi
+}
+
+main "$@"
