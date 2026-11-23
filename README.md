@@ -39,7 +39,7 @@
 
 <p align="center">
   <strong>FECHA DE ENTREGA</strong><br/>
-  Domingo, 29 de noviembre de 2026 — 23:59
+  Domingo, 22 de noviembre de 2026
 </p>
 
 &nbsp;
