@@ -130,14 +130,11 @@ Si la salida no es una terminal (por ejemplo `./despues/yt | cat`), no abre el m
 ### 2.4. Usar un comando sin pasar por el menú
 
 ```bash
-./despues/yt audio "https://youtu.be/VIDEO"
-./despues/yt video "https://youtu.be/VIDEO"
-./despues/yt audio-playlist --list "https://www.youtube.com/playlist?list=LIST"
-./despues/yt video-playlist --list "https://www.youtube.com/playlist?list=LIST"
-./despues/yt x --no-cookies "https://x.com/usuario/status/123"
+./despues/yt audio "https://youtu.be/HWsOivtPz-o"
+./despues/yt video "https://youtu.be/Shqtk_2Jd3c"
 ```
 
-`--list` inspecciona la playlist y no descarga. Sustituya `VIDEO`, `LIST` y la URL de X por una dirección real solo si quiere una descarga de verdad.
+Esas dos direcciones son las de los ejemplos de `antes/yt-audio` y `antes/yt-video`. Hoy resuelven: el audio es «superstar» de Sharou (`HWsOivtPz-o`) y el video es «How to set up Herdr for multi-agent coding» (`Shqtk_2Jd3c`). Una playlist sigue pidiendo una URL de playlist real; los scripts originales no traen un `list=` concreto.
 
 Los nombres anteriores siguen funcionando:
 
