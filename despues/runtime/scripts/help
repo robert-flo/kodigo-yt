@@ -39,8 +39,6 @@ cat << 'HELP_EOF'
     in bin/ call the same modules.
 
   EXAMPLES
-    yt audio "https://youtu.be/VIDEO"
-    yt audio-playlist --list "https://www.youtube.com/playlist?list=LIST"
-    yt video "https://youtu.be/VIDEO"
-    yt x --no-cookies "https://x.com/user/status/123"
+    yt audio "https://youtu.be/HWsOivtPz-o"
+    yt video "https://youtu.be/Shqtk_2Jd3c"
 HELP_EOF

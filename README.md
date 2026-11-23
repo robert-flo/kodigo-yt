@@ -78,11 +78,11 @@ El menú, en una terminal:
 Una descarga real es opcional. Requiere `yt-dlp` y `ffmpeg`, y escribe en `/zt/yt-downloads/` o, si esa ruta no existe, en `~/yt-downloads/`.
 
 ```bash
-./despues/yt audio "https://youtu.be/VIDEO"
-./despues/yt audio-playlist --list "https://www.youtube.com/playlist?list=LIST"
+./despues/yt audio "https://youtu.be/HWsOivtPz-o"
+./despues/yt video "https://youtu.be/Shqtk_2Jd3c"
 ```
 
-`--list` solo inspecciona la playlist.
+Esas direcciones son las de los ejemplos de la suite. El audio es [superstar, de Sharou](https://youtu.be/HWsOivtPz-o). El video es [How to set up Herdr for multi-agent coding](https://youtu.be/Shqtk_2Jd3c). `--list` sigue sirviendo para una playlist, pero los scripts originales no traen un `list=` concreto.
 
 ## Opciones
 
